@@ -1,11 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL=Investment%20Assistant/active_portfolio_management/code.html" />
-    <title>Invst Eg App</title>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Login | MacroPulse Egypt</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1773cf",
+            "background-dark": "#111921",
+            "surface-dark": "#1c2126",
+            "border-dark": "#293038",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-    <p>Redirecting to the application...</p>
+
+<body class="bg-background-dark text-slate-100 min-h-screen font-display flex items-center justify-center p-6">
+
+  <div class="w-full max-w-md bg-surface-dark border border-border-dark rounded-xl p-8">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="size-10 rounded-lg bg-primary/15 flex items-center justify-center text-primary">
+        <span class="material-symbols-outlined">public</span>
+      </div>
+      <div>
+        <h1 class="text-white text-lg font-bold">MacroPulse Egypt</h1>
+        <p class="text-slate-400 text-xs uppercase tracking-widest">Institutional Access</p>
+      </div>
+    </div>
+
+    <form id="login-form" class="space-y-4">
+      <div>
+        <label class="text-slate-300 text-sm font-semibold">Email</label>
+        <input id="email" type="email" required
+          class="mt-2 w-full bg-background-dark border border-border-dark rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:ring-1 focus:ring-primary"
+          placeholder="user@invest.com" />
+      </div>
+
+      <div>
+        <label class="text-slate-300 text-sm font-semibold">Password</label>
+        <input id="password" type="password" required
+          class="mt-2 w-full bg-background-dark border border-border-dark rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:ring-1 focus:ring-primary"
+          placeholder="••••••••" />
+      </div>
+
+      <button type="submit"
+        class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg transition-all active:scale-[0.99]">
+        Login
+      </button>
+
+      <p id="error" class="text-red-400 text-xs font-semibold hidden"></p>
+
+      <p class="text-slate-500 text-[11px] leading-relaxed pt-4 border-t border-border-dark">
+        Accounts are managed by the administrator. If you don’t have access, contact support.
+      </p>
+    </form>
+  </div>
+
+  <!-- Firebase Auth: Login -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+    // ✅ PASTE INVEST firebaseConfig HERE
+    const firebaseConfig = {
+      apiKey: "PASTE",
+      authDomain: "PASTE",
+      projectId: "PASTE",
+      storageBucket: "PASTE",
+      messagingSenderId: "PASTE",
+      appId: "PASTE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ If already logged in, go to dashboard
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "./global-dashboard.html"; // keep same name as in Code B
+      }
+    });
+
+    const form = document.getElementById("login-form");
+    const errorEl = document.getElementById("error");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.classList.add("hidden");
+      errorEl.textContent = "";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "./global-dashboard.html";
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove("hidden");
+      }
+    });
+  </script>
+
 </body>
 </html>
